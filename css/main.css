@@ -1,0 +1,9 @@
+.tasks-blocks {
+  display: flex;
+  justify-content: space-around;
+}
+.tasks-blocks__block {
+  width: 30%;
+  border: 2px solid black;
+  min-height: 400px;
+}/*# sourceMappingURL=main.css.map */
