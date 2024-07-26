@@ -1,12 +1,15 @@
-import { Test } from "./test.js";
+import { Storage } from "./storage.js";
+import { Menu } from "./menu.js";
 
 class TaskManager {
 	#blocks;
+	#storage;
+	#menu;
 
 	constructor() {
 		this.#blocks = document.querySelectorAll(".tasks-blocks__block");
-		this.#controllerChangeTitle();
-		new Test();
+		this.#storage = new Storage();
+		this.#menu = new Menu();
 	}
 
 	#controllerChangeTitle() {
@@ -27,6 +30,7 @@ class TaskManager {
 							const title = block.firstElementChild.textContent;
 							titles.push(title);
 						}
+
 						localStorage.setItem("titles", JSON.stringify(titles));
 
 						title.hidden = false;
@@ -36,13 +40,16 @@ class TaskManager {
 			};
 		}
 	}
+
+	start() {
+		if (this.#storage.checkTitles()) {
+			this.#storage.loadTitles(this.#blocks);
+		} else {
+			this.#storage.saveTitles(this.#blocks);
+		}
+		this.#controllerChangeTitle();
+		this.#menu.start(this.#blocks);
+	}
 }
 
 export { TaskManager };
-
-
-
-class Save {
-  
-
-}
