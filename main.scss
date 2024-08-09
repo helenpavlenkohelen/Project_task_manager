@@ -43,23 +43,31 @@
 
 .tasks-blocks__cards {
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
 }
 
 .tasks-blocks__card {
-	background-color: rgb(117, 114, 114);
+	border: 1px solid black;
+	// background-color: rgb(117, 114, 114);
 	color: rgb(24, 24, 24);
 	text-align: center;
 }
 .tasks-blocks__card_title {
 	padding: 10px 0;
+	border-bottom: 1px solid black;
 }
 .tasks-blocks__card_description {
-	border-top: 2px solid rgb(232, 224, 224);
 	padding: 20px 0;
 }
 
 .btns-Card {
 	position: fixed;
+}
+
+.btn-card {
+	border-radius: 5px;
+	padding: 10px 5px;
+	background-color: black;
+	color: white;
+	box-shadow: -3px 14px 5px 2px black;
 }

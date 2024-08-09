@@ -1,7 +1,10 @@
+import Card from "./card.js";
+
 class Menu {
 	#activeBlock;
-	#menu;
-	#modalWindow;
+	#activeCard;
+	#menuBlock;
+	#modalCreateCard;
 	#btnAddCart;
 	#form;
 	#inputData;
@@ -9,21 +12,25 @@ class Menu {
 	#btnCreate;
 	#btnsCard;
 	#btnOpenCard;
-	#btnCloseCard;
+	#btnDeleteCard;
 	#btnSortCart;
+	#actionAddCard;
 
-	constructor() {
-		this.#menu = document.querySelector(".menu");
-		this.#modalWindow = document.querySelector(".modal");
+	constructor(actionAddCard) {
+		this.#actionAddCard = actionAddCard;
+		this.#menuBlock = document.querySelector(".menu");
+		this.#modalCreateCard = document.querySelector(".modal");
 		this.#btnAddCart = document.querySelector(".menu__button:first-child");
 		this.#form = document.querySelector(".modal__enter");
 		this.#inputData = document.querySelector(".modal__name");
 		this.#textAreaData = document.querySelector(".modal__discription");
 		this.#btnCreate = document.querySelector(".modal__button_create");
-		this.#btnsCard = document.querySelector(".btns-Card");
-		this.#btnOpenCard = document.querySelector(".btn-Card:first-child");
-		this.#btnCloseCard = document.querySelector(".btn-Card:last-child");
+		this.#btnsCard = document.querySelector(".btns-card");
+		this.#btnOpenCard = document.querySelector(".btn-card:first-child");
+		this.#btnDeleteCard = document.querySelector(".btn-card:last-child");
 		this.#btnSortCart = document.querySelector(".menu__button:last-child");
+		this.#activeCard = { value: null };
+		this.addActiveCard = this.addActiveCard.bind(this);
 	}
 
 	#controllerOpenMenu(blocks) {
@@ -31,24 +38,27 @@ class Menu {
 			block.oncontextmenu = (e) => {
 				e.preventDefault();
 				this.#activeBlock = block;
-				this.#menu.hidden = false;
-				this.#menu.style.top = e.clientY + "px";
-				this.#menu.style.left = e.clientX + "px";
+				this.#menuBlock.hidden = false;
+				this.#menuBlock.style.top = e.clientY + "px";
+				this.#menuBlock.style.left = e.clientX + "px";
 			};
 		}
 	}
 
-	#controllerAddCart() {
+	#controllerAddCartButton() {
 		this.#btnAddCart.onclick = () => {
-			this.#modalWindow.classList.add("active");
-			this.#menu.hidden = true;
+			this.#modalCreateCard.classList.add("active");
+			this.#menuBlock.hidden = true;
 		};
 	}
 
 	#controllerCloseMenu() {
 		document.onclick = () => {
-			if (!this.#menu.hidden) {
-				this.#menu.hidden = true;
+			if (!this.#menuBlock.hidden) {
+				this.#menuBlock.hidden = true;
+			}
+			if (!this.#btnsCard.hidden) {
+				this.#btnsCard.hidden = true;
 			}
 		};
 	}
@@ -57,73 +67,141 @@ class Menu {
 		this.#form.onclick = (e) => {
 			e.stopPropagation();
 		};
-		this.#modalWindow.onclick = () => {
-			this.#modalWindow.classList.remove("active");
+		this.#modalCreateCard.onclick = () => {
+			this.#modalCreateCard.classList.remove("active");
 		};
+	}
+
+	set activeCard(card) {
+		console.log(this.#activeCard, card);
+		this.#activeCard.value = card;
+		console.log(this.#activeCard, card);
+	}
+
+	addActiveCard(card) {
+		console.log(this);
+		this.activeCard = card;
 	}
 
 	#controllerBtnCreateCart() {
 		this.#btnCreate.onclick = () => {
-			const divCard = document.createElement("div");
-			const divTitle = document.createElement("div");
-			const divDescription = document.createElement("div");
+			const card = new Card(
+				this.#inputData.value,
+				this.#textAreaData.value,
+				this.#activeBlock,
+				this.addActiveCard,
+				this.#btnsCard
+			);
 
-			divCard.classList.add("tasks-blocks__card");
-			divTitle.classList.add("tasks-blocks__card_title");
-			divDescription.classList.add("tasks-blocks__card_description");
+			this.#actionAddCard(card);
 
-			divCard.append(divTitle);
-			divCard.append(divDescription);
-			divTitle.textContent = this.#inputData.value;
-			divDescription.textContent = this.#textAreaData.value;
-			divDescription.hidden = true;
+			// const divCard = document.createElement("div");
+			// const divTitle = document.createElement("div");
+			// const divDescription = document.createElement("div");
 
-			console.log(this.#activeBlock.lastElementChild);
-			this.#activeBlock.lastElementChild.append(divCard);
+			// divCard.classList.add("tasks-blocks__card");
+			// divTitle.classList.add("tasks-blocks__card_title");
+			// divDescription.classList.add("tasks-blocks__card_description");
+
+			// divTitle.textContent = this.#inputData.value;
+			// divDescription.textContent = this.#textAreaData.value;
+			// divCard.append(divTitle);
+			// divCard.append(divDescription);
+			// divDescription.hidden = true;
+
+			// const cardData = {
+			// 	title: divTitle.textContent,
+			// 	description: divDescription.textContent,
+			// };
+
+			// const cardData = [];
+			// cardData.push(divTitle.textContent);
+			// cardData.push(divDescription.textContent);
+
+			// localStorage.setItem("divCard", JSON.stringify(cardData));
+
+			// console.log(this.#activeBlock.lastElementChild);
+			// this.#activeBlock.lastElementChild.append(divCard);
+
 			this.#inputData.value = "";
 			this.#textAreaData.value = "";
 
-			this.#modalWindow.classList.remove("active");
+			this.#modalCreateCard.classList.remove("active");
 
-			divTitle.ondblclick = () => {
-				if (divDescription.hidden) {
-					divDescription.hidden = false;
-				} else {
-					divDescription.hidden = true;
-				}
-			};
+			// divTitle.ondblclick = () => {
+			// 	if (divDescription.hidden) {
+			// 		divDescription.hidden = false;
+			// 	} else {
+			// 		divDescription.hidden = true;
+			// 	}
+			// };
 
-			divTitle.oncontextmenu = (e) => {
-				e.preventDefault();
-				this.#btnsCard.hidden = false;
-				this.#btnsCard.style.top = e.clientY + "px";
-				this.#btnsCard.style.left = e.clientX + "px";
-				console.log(e);
-			};
+			// divCard.oncontextmenu = (e) => {
+			// 	e.preventDefault();
+			// 	e.stopPropagation();
 
-			this.#btnOpenCard.onclick = () => {
-				divDescription.hidden = false;
-			};
+			// 	this.#btnsCard.hidden = false;
+			// 	this.#btnsCard.style.top = e.clientY + "px";
+			// 	this.#btnsCard.style.left = e.clientX + "px";
+			// 	this.#activeCard = divCard;
+			// };
 
-			this.#btnCloseCard.onclick = () => {
-				divDescription.hidden = true;
-			};
+			// divCard.onmousedown = () => {
+			// 	divCard.style.zIndex = 10;
+			// 	divCard.style.position = "fixed";
+			// 	document.onmousemove = (e) => {
+			// 		console.log("e.pageX:", e.pageX, "e.pageY", e.pageY);
+			// 		divCard.style.left =
+			// 			e.pageX -
+			// 			parseFloat(getComputedStyle(divCard).width) / 2 +
+			// 			"px";
+			// 		divCard.style.top =
+			// 			e.pageY -
+			// 			parseFloat(getComputedStyle(divCard).height) / 2 +
+			// 			"px";
+			// 	};
+			// };
 		};
+
+		//     #conrtollerMoveCard(){
+
+		// }
 	}
+
+	#controllerMenuActionCard = () => {
+		this.#btnOpenCard.onclick = () => {
+			if (this.#activeCard.value.lastElementChild.hidden) {
+				this.#activeCard.value.lastElementChild.hidden = false;
+				this.#btnOpenCard.textContent = "закрыть";
+			} else {
+				this.#activeCard.value.lastElementChild.hidden = true;
+				this.#btnOpenCard.textContent = "открыть";
+			}
+
+			this.#btnsCard.hidden = true;
+		};
+
+		this.#btnDeleteCard.onclick = () => {
+			this.#activeCard.value.remove();
+			this.#btnsCard.hidden = true;
+		};
+	};
 
 	#controllerSortCarts() {
 		this.#btnSortCart.onclick = () => {
-			this.#menu.hidden = true;
+			this.#menuBlock.hidden = true;
 		};
 	}
 
 	start(blocks) {
 		this.#controllerOpenMenu(blocks);
-		this.#controllerAddCart();
+		this.#controllerAddCartButton();
 		this.#controllerCloseMenu();
 		this.#conrtollerModalAddClose();
 		this.#controllerBtnCreateCart();
 		this.#controllerSortCarts();
+		this.#controllerMenuActionCard();
+		// this.#controllerCloseBtnsCard();
 	}
 }
 

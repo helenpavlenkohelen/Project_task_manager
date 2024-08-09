@@ -1,8 +1,33 @@
 class Storage {
 	#titles;
+	#cards;
 
 	constructor() {
+		this.#cards = localStorage.getItem("cards");
 		this.#titles = localStorage.getItem("titles");
+	}
+
+	get cards() {
+		return this.#cards;
+	}
+
+	set cards(card) {
+		if (this.cards) {
+			this.#cards.push(card);
+		} else {
+			this.#cards = [card];
+		}
+	}
+
+	addCard(card) {
+		this.cards = card;
+
+		// Добавлять карточку в локальное хранилие
+		// const cardData = [];
+		// cardData.push(divTitle.textContent);
+		// cardData.push(divDescription.textContent);
+
+		// localStorage.setItem("divCard", JSON.stringify(cardData));
 	}
 
 	checkTitles() {

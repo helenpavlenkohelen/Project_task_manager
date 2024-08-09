@@ -9,7 +9,7 @@ class TaskManager {
 	constructor() {
 		this.#blocks = document.querySelectorAll(".tasks-blocks__block");
 		this.#storage = new Storage();
-		this.#menu = new Menu();
+		this.#menu = new Menu(this.#storage.addCard);
 	}
 
 	#controllerChangeTitle() {
